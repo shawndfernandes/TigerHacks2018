@@ -17,7 +17,8 @@ const cacheMoney = new Map();
 let options = {
     provider: 'google',
     httpAdapter: 'https', // Default
-    apiKey: 'AIzaSyA0qOtDlNfCnZt15BlkFkO1GN6b1poosEs', // for Mapquest, OpenCage, Google Premier
+    apiKey: 'AIzaSyA0qOtDlNfCnZt15BlkFkO1GN6b1poosEs',
+	//apiKey: 'AIzaSyAmCyfxvuFDJBkjGnFBEM9kJY8XbP_1A2c', // for Mapquest, OpenCage, Google Premier, my old api key
     formatter: null         // 'gpx', 'string', ...
 };
 let geocoder = NodeGeocoder(options);
@@ -31,9 +32,29 @@ app.use(function (req, res, next) {
 app.get('/api/articles', async function (req, res) {
 
     // object to return
-    let myObject = { "trendingArticles": [], "relativeArticles": [], "totalResults": "", "locationString": "" };
+    let myObject = { "trendingArticles": [], "relativeArticles": [], "totalResults": "", "locationString": "","lat_ret": "","lon_ret": "" };
+    let citySearchString = " ";
+    if (req.query.city != null){
+       citySearchString += req.query.city + " ";
+	   
+	   const latlonSearch = await geocoder.geocode(citySearchString, function(err, res) {
+  console.log(res);
+   });
+	  if (!latlonSearch[0].latitude|| !latlonSearch[0].longitude) {
+        res.json(myObject);
+        res.end();
+    }
+	  
+	  myObject.lat_ret = latlonSearch[0].latitude  ;
+	myObject.lon_ret = latlonSearch[0].longitude  ; 
+	
+    }   
+	
+	
+    if (req.query.city == null) {
+        
 
-    const citySearch = await geocoder.reverse({ 
+	const citySearch = await geocoder.reverse({ 
         lat: req.query.lat, lon: req.query.lon 
     });
 
@@ -41,14 +62,17 @@ app.get('/api/articles', async function (req, res) {
         res.json(myObject);
         res.end();
     }
+      
 
     // console.log(citySearch[0].city);
 
-    let citySearchString = "";
+    
 
     citySearchString += citySearch[0].city + " ";
     citySearchString += citySearch[0].administrativeLevels.level1long + " ";
     // citySearchString += citySearch[0].country + " ";
+    }
+
     if (req.query.content != null) {
         citySearchString += req.query.content;
     }
@@ -165,6 +189,17 @@ app.get('/api/articles', async function (req, res) {
 
 app.get('/api/getCity', function (req, res) {
     const response = geocoder.reverse({ lat: req.query.lat, lon: req.query.lon })
+        .then(function (response) { 
+            console.log(response);
+            res.send(response);
+        }) 
+        .catch(function (err) {
+            console.log(err);
+        });
+})
+
+app.get('/api/getlatlon', function (req, res) {
+    const response = geocoder.geocode({address: req.query.city })
         .then(function (response) { 
             console.log(response);
             res.send(response);
