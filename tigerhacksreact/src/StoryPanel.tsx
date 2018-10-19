@@ -35,6 +35,7 @@ interface IStoryPanelState {
   newStories: IArticle[][];
   viewport: Viewport;
   searchTerm: string;
+  cityTerm: string;
 }
 
 export class StoryPanel extends React.Component<any, IStoryPanelState> {
@@ -52,7 +53,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
         longitude: -92.3341,
         zoom: 15
       },
-      searchTerm: ""
+      searchTerm: "",
+	  cityTerm: ""
     };
   }
 
@@ -131,22 +133,6 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 >
                   Chicago
                 </Button>
-                <Button
-                  color="primary"
-                  onClick={(e: any) => {
-                    this.setState({
-                      viewport: {
-                        latitude: 38.9517,
-                        longitude: -92.3341,
-                        zoom: 15
-                      },
-                      location: "Columbia Missouri"
-                    });
-                    this.componentDidMount();
-                  }}
-                >
-                  Columbia
-                </Button>
               </div>
               <ReactMapGL
                 width={845}
@@ -164,8 +150,11 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
             <Col xs="6">
               <Row style={{ paddingTop: "10px" }}>
                 <Col md={1}>
-                  <FormGroup style={{ paddingTop: "10px", width: "100px" }}>
-                    <Label for="searchTerm">NÜZVÜZ:</Label>
+                  <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
+                    <Label for="cityTerm">NÜZVÜZ Topic:</Label>
+                  </FormGroup>
+				  <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
+                    <Label for="searchTerm">NÜZVÜZ City:</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -179,6 +168,19 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                       value={this.state.searchTerm}
                       onChange={e => {
                         this.setState({ searchTerm: e.target.value });
+                      }}
+                    />
+                  </FormGroup>
+				  <FormGroup>
+                    <Input
+                      type="text"
+                      name="cityTerm"
+                      id="cityTerm"
+                      // placeholder="with a placeholder"
+                      // tslint:disable-next-line:jsx-no-lambda
+                      value={this.state.cityTerm}
+                      onChange={e => {
+                        this.setState({ cityTerm: e.target.value });
                       }}
                     />
                   </FormGroup>
@@ -220,18 +222,50 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
   }
 
   public componentDidMount() {
-    fetch(
-      "http://ec2-52-200-77-175.compute-1.amazonaws.com:8080/api/articles?lat=" +
-        this.state.viewport.latitude +
-        "&lon=" +
-        this.state.viewport.longitude +
-        "&content=" +
-        this.state.searchTerm,
+	  
+	if(this.state.cityTerm) {  
+    fetch("http://ec2-18-222-217-45.us-east-2.compute.amazonaws.com:8080/api/articles?city=" + this.state.cityTerm + "&content=" + this.state.searchTerm,
       {
         mode: "cors"
       }
     )
-      .then(response => response.json())
+	.then(response => response.json())
+      .then(data => {
+        if (data.locationString !== this.state.location) {
+          const stories: IArticle[][] = [];
+
+          for (let i = 0; i < data.relativeArticles.length; i++) {
+            if (stories[Math.floor(i / 9)] === undefined) {
+              stories[Math.floor(i / 9)] = [];
+            }
+            stories[Math.floor(i / 9)].push(data.relativeArticles[i]);
+          }
+          data.trendingArticles.forEach((article: IArticle) => {
+            stories.push([article]);
+          });
+          shuffle(stories);
+
+          this.setState({
+            loaded: true,
+            newStories: stories,
+            location: data.locationString,
+            // newLocation: data.locationString
+			viewport: {
+                        latitude : data.lat_ret,
+                        longitude : data.lon_ret,
+                        zoom: 14
+                      }
+          });
+        }
+      });
+	}
+	else {
+		fetch("http://ec2-18-222-217-45.us-east-2.compute.amazonaws.com:8080/api/articles?lat=" + this.state.viewport.latitude + "&lon=" + this.state.viewport.longitude + "&content=" + this.state.searchTerm,
+      {
+        mode: "cors"
+      }
+    )
+	.then(response => response.json())
       .then(data => {
         if (data.locationString !== this.state.location) {
           const stories: IArticle[][] = [];
@@ -255,6 +289,19 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
           });
         }
       });
+	}
+	 // fetch(
+     // "http://ec2-52-200-77-175.compute-1.amazonaws.com:8080/api/articles?lat=" +
+      //  this.state.viewport.latitude +
+       // "&lon=" +
+       // this.state.viewport.longitude +
+       // "&content=" +
+       // this.state.searchTerm,
+     // {
+      //  mode: "cors"
+     // }
+   // )
+    
   }
 }
 
