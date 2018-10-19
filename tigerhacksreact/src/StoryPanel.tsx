@@ -139,6 +139,7 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 height={892}
                 mapboxApiAccessToken="pk.eyJ1IjoiZGxrc2FmaiIsImEiOiJjam44NmhkcjYwNnliM2twZnUyem1qdG5yIn0.aX2_1Xn0BU5W6FkzThi_gQ"
                 {...this.state.viewport}
+				mapStyle="mapbox://styles/mapbox/streets-v10"
                 // tslint:disable-next-line:jsx-no-lambda
                 onViewportChange={viewport => {
                   this.setState({ viewport });
