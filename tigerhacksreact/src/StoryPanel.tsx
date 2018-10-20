@@ -143,7 +143,7 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 // tslint:disable-next-line:jsx-no-lambda
                 onViewportChange={viewport => {
                   this.setState({ viewport });
-                  this.componentDidMount();
+                  // this.componentDidMount();
                   // console.log(viewport);
                 }}
               />
