@@ -51,7 +51,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
       viewport: {
         latitude: 38.9517,
         longitude: -92.3341,
-        zoom: 15
+        zoom: 15,
+		pitch: 70
       },
       searchTerm: "",
 	  cityTerm: ""
@@ -76,7 +77,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                       viewport: {
                         latitude: 40.7128,
                         longitude: -74.006,
-                        zoom: 14
+                        zoom: 14,
+						pitch: 70
                       },
                       location: "New York New York"
                     });
@@ -92,7 +94,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                       viewport: {
                         latitude: 34.0522,
                         longitude: -118.2437,
-                        zoom: 14
+                        zoom: 14,
+						pitch: 70
                       },
                       location: "Los Angeles California"
                     });
@@ -108,7 +111,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                       viewport: {
                         latitude: 51.5074,
                         longitude: -0.1278,
-                        zoom: 14
+                        zoom: 14,
+						pitch: 70
                       },
                       location: "London England"
                     });
@@ -124,7 +128,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                       viewport: {
                         latitude: 41.8781,
                         longitude: -87.6298,
-                        zoom: 14
+                        zoom: 14,
+						pitch: 70
                       },
                       location: "Chicago Illinois"
                     });
@@ -140,6 +145,16 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 mapboxApiAccessToken="pk.eyJ1IjoiZGxrc2FmaiIsImEiOiJjam44NmhkcjYwNnliM2twZnUyem1qdG5yIn0.aX2_1Xn0BU5W6FkzThi_gQ"
                 {...this.state.viewport}
 				mapStyle="mapbox://styles/mapbox/streets-v10"
+				// mapbox://styles/mapbox/streets-v10
+                // mapbox://styles/mapbox/outdoors-v10
+                // mapbox://styles/mapbox/light-v9
+                // mapbox://styles/mapbox/dark-v9
+                // mapbox://styles/mapbox/satellite-v9
+                // mapbox://styles/mapbox/satellite-streets-v10
+                // mapbox://styles/mapbox/navigation-preview-day-v4
+                // mapbox://styles/mapbox/navigation-preview-night-v4
+                // mapbox://styles/mapbox/navigation-guidance-day-v4
+                // mapbox://styles/mapbox/navigation-guidance-night-v4
                 // tslint:disable-next-line:jsx-no-lambda
                 onViewportChange={viewport => {
                   this.setState({ viewport });
@@ -152,10 +167,10 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
               <Row style={{ paddingTop: "10px" }}>
                 <Col md={1}>
                   <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
-                    <Label for="cityTerm">NÜZVÜZ Topic:</Label>
+                    <Label for="searchTerm">NÜZVÜZ Topic:</Label>
                   </FormGroup>
-				  <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
-                    <Label for="searchTerm">NÜZVÜZ City:</Label>
+				   <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
+                    <Label for="cityTerm">NÜZVÜZ City:</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -254,7 +269,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
 			viewport: {
                         latitude : data.lat_ret,
                         longitude : data.lon_ret,
-                        zoom: 14
+                        zoom: 14,
+						pitch: 70
                       }
           });
         }
@@ -291,17 +307,7 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
         }
       });
 	}
-	 // fetch(
-     // "http://ec2-52-200-77-175.compute-1.amazonaws.com:8080/api/articles?lat=" +
-      //  this.state.viewport.latitude +
-       // "&lon=" +
-       // this.state.viewport.longitude +
-       // "&content=" +
-       // this.state.searchTerm,
-     // {
-      //  mode: "cors"
-     // }
-   // )
+	
     
   }
 }
