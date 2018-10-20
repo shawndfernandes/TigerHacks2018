@@ -52,11 +52,13 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
         latitude: 38.9517,
         longitude: -92.3341,
         zoom: 15,
-		pitch: 70
-      },
-      searchTerm: "",
+	    pitch: 70,
+		bearing: 0
+	},
+	  searchTerm: "",
 	  cityTerm: ""
     };
+	
   }
 
   public render() {
@@ -64,7 +66,7 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
       // if (this.state.location !== this.state.newLocation) {
       // this.state.stories.push(...this.state.newStories);
       // }
-
+      
       return (
         <div>
           <Row>
@@ -78,7 +80,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                         latitude: 40.7128,
                         longitude: -74.006,
                         zoom: 14,
-						pitch: 70
+						pitch: 70,
+						bearing: 0
                       },
                       location: "New York New York"
                     });
@@ -95,7 +98,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                         latitude: 34.0522,
                         longitude: -118.2437,
                         zoom: 14,
-						pitch: 70
+						pitch: 70,
+						bearing: 0
                       },
                       location: "Los Angeles California"
                     });
@@ -112,7 +116,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                         latitude: 51.5074,
                         longitude: -0.1278,
                         zoom: 14,
-						pitch: 70
+						pitch: 70,
+						bearing: 0
                       },
                       location: "London England"
                     });
@@ -129,7 +134,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                         latitude: 41.8781,
                         longitude: -87.6298,
                         zoom: 14,
-						pitch: 70
+						pitch: 70,
+						bearing: 0
                       },
                       location: "Chicago Illinois"
                     });
@@ -140,8 +146,9 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 </Button>
               </div>
               <ReactMapGL
-                width={845}
-                height={892}
+			  
+                width={window.innerWidth / 2} // {"50%"} // {845}
+	            height={window.innerHeight}// {"100%"} // {892}
                 mapboxApiAccessToken="pk.eyJ1IjoiZGxrc2FmaiIsImEiOiJjam44NmhkcjYwNnliM2twZnUyem1qdG5yIn0.aX2_1Xn0BU5W6FkzThi_gQ"
                 {...this.state.viewport}
 				mapStyle="mapbox://styles/mapbox/streets-v10"
@@ -156,20 +163,23 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                 // mapbox://styles/mapbox/navigation-guidance-day-v4
                 // mapbox://styles/mapbox/navigation-guidance-night-v4
                 // tslint:disable-next-line:jsx-no-lambda
-                onViewportChange={viewport => {
-                  this.setState({ viewport });
-                  // this.componentDidMount();
+                
+				
+				
                   // console.log(viewport);
-                }}
+				onViewportChange={viewport => {
+                  this.setState({ viewport });		  
+				 }
+				}
               />
             </Col>
             <Col xs="6">
               <Row style={{ paddingTop: "10px" }}>
                 <Col md={1}>
-                  <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
+                  <FormGroup style={{ paddingTop: "10px", width: window.innerWidth / 20 }}>
                     <Label for="searchTerm">NÜZVÜZ Topic:</Label>
                   </FormGroup>
-				   <FormGroup style={{ paddingTop: "10px", width: "50px" }}>
+				   <FormGroup style={{ paddingTop: "10px", width: window.innerWidth / 20 }}>
                     <Label for="cityTerm">NÜZVÜZ City:</Label>
                   </FormGroup>
                 </Col>
@@ -237,6 +247,7 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
     return <p>Loading...</p>;
   }
 
+    
   public componentDidMount() {
 	  
 	if(this.state.cityTerm) {  
@@ -270,7 +281,8 @@ export class StoryPanel extends React.Component<any, IStoryPanelState> {
                         latitude : data.lat_ret,
                         longitude : data.lon_ret,
                         zoom: 14,
-						pitch: 70
+						pitch: 70,
+						bearing: 0
                       }
           });
         }
