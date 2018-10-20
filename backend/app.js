@@ -38,7 +38,7 @@ app.get('/api/articles', async function (req, res) {
        citySearchString += req.query.city + " ";
 	   
 	   const latlonSearch = await geocoder.geocode(citySearchString, function(err, res) {
-  console.log(res);
+    //console.log(res);
    });
 	  if (!latlonSearch[0].latitude|| !latlonSearch[0].longitude) {
         res.json(myObject);
